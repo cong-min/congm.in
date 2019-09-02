@@ -89,6 +89,7 @@ body {
     background: @bing-bg center center no-repeat #aaa;
     background-size: cover;
     pointer-events: none;
+    transform: perspective(0); // fixbug: clip fixed
 }
 // 滤镜层
 @filter-layer-bg1: rgba(61,66,96,0.4);
@@ -109,7 +110,7 @@ body {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate3d(-50%, -110px, 0);
+    transform: translate3d(-50%, -110px, 0) perspective(0); // perspective fixbug: clip fixed
     width: 100%;
     box-sizing: border-box;
     padding: 0 30px 30px;
@@ -120,7 +121,6 @@ body {
         width: 100%;
         max-width: 630px;
         margin: 0 auto;
-        transform: translateZ(0);
         text {
             font-size: 140px;
             font-family: Ubuntu;
@@ -141,7 +141,7 @@ body {
     }
 }
 .scroll-down {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 50%;
     transform: translate3d(-50%, -10px, 0);
