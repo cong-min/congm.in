@@ -12,7 +12,7 @@ var CNZZ_ID = 1257517667;
 // consoleMe
 (function consoleMe() {
     if (/webkit/.test(navigator.userAgent.toLowerCase())) {
-        console.log('%c ', 'background-image:url("https://cdn.congm.in/static/congmin-black.png");background-repeat:no-repeat;background-size:auto 150px;line-height:150px;padding:75px 265px;');
+        console.log('%c ', 'background-image:url("//cdn.congm.in/static/congmin-black.png");background-repeat:no-repeat;background-size:auto 150px;line-height:150px;padding:75px 265px;');
         console.log('%c @ Cong Min - 闵聪      https://congm.in', 'font-family:"Helvetica Neue",Helvetica,Arial,"Microsoft YaHei",sans-serif;color:#666;font-size:14px;line-height:32px;padding-left:32px;');
     }
 })();
