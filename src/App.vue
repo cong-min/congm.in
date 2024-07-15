@@ -32,12 +32,9 @@
                 </svg>
                 <!-- motto -->
                 <div class="motto">
-                    <a href="//i.congm.in" title="Blog" target="_blank">Think</a>
+                    <a href="https://github.com/mcc108" title="Blog" target="_blank">Think</a>
                     &
-                    <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=CGVhZmtnZm9Ia2dmb2UmYWY" title="Github" target="_blank">Different</a>,
-                    <a href="//resume.congm.in" title="Github" target="_blank">Design</a>
-                    &
-                    <a href="https://github.com/mcc108" title="Github" target="_blank">Develop</a>.
+                    <a href="https://resume.congm.in" title="Github" target="_blank">Different</a>.
                 </div>
             </div>
         </div>

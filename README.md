@@ -1,3 +1,3 @@
 # Cong Min
 
-Think & Different, Design & Develop.
+Think & Different.
