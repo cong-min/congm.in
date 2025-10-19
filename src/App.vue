@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style lang="less">
-@bing-bg: url('https://congm.in/bing.php'); // bing 壁纸
+@bing-bg: url('https://congm.in/bing'); // bing 壁纸
 @body-bg: #fafafa;
 
 body {
