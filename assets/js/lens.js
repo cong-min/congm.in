@@ -10,6 +10,9 @@
     var screen2 = document.getElementById('screen2');
     var wm = document.getElementById('watermark');
     var mapEl = document.getElementById('bh-map');
+    var maskName = document.getElementById('mask-name');
+    var maskMotto = document.getElementById('mask-motto');
+    var mottoHit = document.getElementById('motto-hit');
     if (!screen2 || !wm) return;
 
     var MAP = 320, MAP_R = MAP / 2; // black-hole warp diameter (px): size of the distorted region
@@ -59,7 +62,21 @@
         // motto: snapped to a real watermark row near the bottom and centred on it
         var mottoRow = Math.min(rows - 1, Math.round(rMid + (0.35 * h) / CELL));
         var mY = (mottoRow - rMid) * CELL;
-        if (motto) motto.style.top = (h / 2 + mY) + 'px';
+        // name: same centred min(90vw,640px) box as screen 1; height via the 180/630 viewBox
+        // ratio; -5px replicates screen 1's .wordmark margin-bottom:10px (flex centres the
+        // single in-flow child, shifting it up by half the margin)
+        if (maskName) {
+            var nameH = nameW * (180 / 630);
+            maskName.setAttribute('width', nameW);
+            maskName.setAttribute('height', nameH);
+            maskName.setAttribute('x', (w - nameW) / 2);
+            maskName.setAttribute('y', (h - nameH) / 2 - 5);
+        }
+        // motto: centred on the same watermark-row centreline; baseline = row centre + ~0.35em
+        // of the 20px text so the line sits optically centred on the row
+        var mottoCY = h / 2 + mY + 7;
+        if (maskMotto) { maskMotto.setAttribute('x', w / 2); maskMotto.setAttribute('y', mottoCY); }
+        if (mottoHit) { mottoHit.setAttribute('x', w / 2); mottoHit.setAttribute('y', mottoCY); }
         if (wm.dataset.cols == cols && wm.dataset.rows == rows && wm.dataset.namew == Math.round(nameW)) return;
         wm.dataset.cols = cols; wm.dataset.rows = rows; wm.dataset.namew = Math.round(nameW);
         var html = '';
@@ -78,7 +95,6 @@
     }
 
     var scrollHint = document.querySelector('.scroll-hint');
-    var motto = document.querySelector('.motto');
     var EASE = 0.15; // lens follows the cursor with a slight trailing lag (lower = more lag)
     var targetX = (window.innerWidth || 1280) / 2;
     var targetY = (window.innerHeight || 800) / 2;
@@ -152,9 +168,9 @@
         screen1.style.zIndex = '4';                         // cover above screen 2 for the bloom
         var bg = new Image();
         // bloom only once the wallpaper is DECODED (paint-ready), not merely downloaded, so the
-        // reveal shows the photo itself instead of the #aaa fallback flashing to the image. The CSS
-        // background (.wallpaper / .wallpaper-fill) shares this URL, so its bytes are already cached
-        // and it paints in step with the bloom.
+        // reveal shows the photo itself instead of the #aaa fallback flashing to the image. The
+        // screen 1 .wallpaper background and the screen 2 photo-fill <image> share this URL, so its
+        // bytes are already cached and they paint in step with the bloom.
         bg.onload = function () {
             if (bg.decode) bg.decode().then(startIntro, startIntro); // decode failure still blooms
             else startIntro();

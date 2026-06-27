@@ -31,20 +31,46 @@
     </div>
 
     <!-- screen 2: light; revealed by the cursor lens on screen 1, fully on scroll.
-         the name is black "ink"; the wallpaper sits on top with mix-blend-mode:screen,
-         so the photo fills only the letters while the background stays solid (à la the original) -->
+         the name + motto are photo-filled by a full-viewport SVG <image> (the same aligned
+         cover as screen 1) masked to the glyph shapes and composited source-over, so the
+         watermark / black-hole filter re-rendering behind them never disturbs the fill -->
     <div class="screen screen2" id="screen2">
         <div class="watermark" id="watermark" aria-hidden="true"></div>
-        <div class="name-knockout">
-            <div class="name-field">
-                <svg class="wordmark wm-ink" viewBox="0 0 630 180" aria-hidden="true"><text x="50%" y="50%" dy=".35em">Cong Min</text></svg>
-                <p class="motto">
-                    <span aria-hidden="true">Stay <span class="motto-word" id="motto-word"></span><span class="motto-caret">.</span></span>
-                    <span class="sr-only">Stay curious, inspired, creative, passionate, grounded, patient, present, humble.</span>
-                </p>
-                <div class="wallpaper wallpaper-fill"></div>
-            </div>
-        </div>
+
+        <svg class="photo-name" id="photo-name" aria-hidden="true"
+             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+             preserveAspectRatio="none">
+            <defs>
+                <!-- luminance mask: white reveals the photo, transparent hides it. The outer svg
+                     has no viewBox, so 1 user unit == 1px and coordinates are CSS px. -->
+                <mask id="photo-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%"
+                      color-interpolation="sRGB">
+                    <!-- name: nested svg shares screen 1's 630x180 viewBox + glyph geometry;
+                         lens.js sets x/y/width/height to the centred min(90vw,640px) box. -->
+                    <svg id="mask-name" class="mask-wordmark" viewBox="0 0 630 180"
+                         x="0" y="0" width="640" height="182.857" preserveAspectRatio="xMidYMid meet">
+                        <text x="50%" y="50%" dy=".35em">Cong Min</text>
+                    </svg>
+                    <!-- motto: live typewriter text; lens.js sets x/y to a watermark row. -->
+                    <text id="mask-motto" class="mask-motto" x="50%" y="50%" text-anchor="middle" xml:space="preserve">Stay <tspan class="motto-word" id="motto-word"></tspan><tspan class="motto-caret" id="motto-caret">.<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1s" calcMode="discrete" repeatCount="indefinite"/></tspan></text>
+                </mask>
+            </defs>
+            <g mask="url(#photo-mask)">
+                <!-- grey fallback shown while the photo is loading (image hidden via CSS) -->
+                <rect x="0" y="0" width="100%" height="100%" fill="#4a515d"/>
+                <!-- the same aligned cover as screen 1: xMidYMid slice == background center/cover -->
+                <image id="photo-image" x="0" y="0" width="100%" height="100%"
+                       preserveAspectRatio="xMidYMid slice"
+                       href="https://congm.in/bing" xlink:href="https://congm.in/bing"/>
+            </g>
+            <!-- transparent hover target for the motto (mask content never receives pointer
+                 events); lens.js keeps it over #mask-motto, motto.js binds pause/resume on it -->
+            <text id="motto-hit" class="motto-hit" x="50%" y="50%" text-anchor="middle"
+                  xml:space="preserve" fill="transparent" pointer-events="all">Stay Passionate.</text>
+        </svg>
+
+        <!-- accessible motto text for screen readers -->
+        <p class="sr-only">Stay curious, inspired, creative, passionate, grounded, patient, present, humble.</p>
     </div>
 
     <!-- gives the page scroll height (screens are fixed) -->

@@ -103,20 +103,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .cover { transition: none; }
 }
-/* while loading, only the photo fill is hidden, so the name + motto stay visible as solid
-   dark ink (the knockout renders them black) — kept on screen, but never photo-tinted */
-.screen2.loading .wallpaper-fill { visibility: hidden; }
-
 .wallpaper {
     position: absolute;
     inset: 0;
     background: var(--bing-bg) center center / cover no-repeat #aaa;
-}
-/* the wallpaper sits ON TOP of the black name with screen blend: photo shows through the
-   letters (screen over black = photo), background stays solid (screen over near-white ≈ no-op) */
-.wallpaper-fill {
-    z-index: 3;
-    mix-blend-mode: screen;
 }
 .filter {
     position: absolute;
@@ -182,52 +172,48 @@ body {
     paint-order: stroke;
 }
 .wm-light text { fill: #fff; stroke: #fff; }
-/* screen 2 name is pure-black ink so the screen-blended wallpaper fills the letters fully */
-.wm-ink text { fill: #000; stroke: #000; }
-/* while loading, the name + motto render a touch grey (not pure black) to match the tone */
-.screen2.loading .wm-ink text { fill: #4a515d; stroke: #4a515d; }
-.screen2.loading .motto { color: #4a515d; }
-
-/* knockout group: an isolated white field (.name-field) holds the black name + screen-blended
-   wallpaper, so the photo shows through the letters while the field stays white. The outer
-   .name-knockout then multiplies that field over the solid screen: white collapses to the
-   background colour and only the letters carry the photo — background stays solid and the
-   watermark underneath is untouched. (isolation + blend must be on separate elements.) */
-.name-knockout {
+/* photo-filled name + motto: a full-viewport SVG <image> (the same aligned cover as screen 1)
+   masked to the glyph shapes, composited source-over over the watermark + light bg. No
+   mix-blend-mode reads the backdrop, so the watermark filter and lens clip cannot disturb it. */
+.photo-name {
     position: absolute;
     inset: 0;
     z-index: 3;
-    mix-blend-mode: multiply;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* lens/scroll pass through; the motto hit-target re-enables itself */
 }
-.name-field {
-    position: absolute;
-    inset: 0;
-    isolation: isolate;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* mask content is luminance — pure white reveals the photo. The nested name svg shares
+   screen 1's 630x180 viewBox + stroke geometry, so the revealed silhouette matches the white
+   name on screen 1 (same font-size/weight/stroke/paint-order). */
+.mask-wordmark text {
+    font-family: Ubuntu, sans-serif;
+    font-weight: 500;
+    font-size: 130px;
+    text-anchor: middle;
+    fill: #fff;
+    stroke: #fff;
+    stroke-width: 5px;
+    stroke-linejoin: round;
+    paint-order: stroke;
 }
-
-/* motto — near the page bottom; black ink inside the knockout field, so it is photo-filled
-   by the same wallpaper-screen blend as the name. JS sets `top` to a watermark row centre so
-   the motto and the watermark letters flanking it share one horizontal centreline */
-.motto {
-    position: absolute;
-    top: 50%; /* overridden by lens.js to a watermark row near the bottom */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2; /* below .wallpaper-fill (z3) so the screen blend fills the letters */
+.mask-motto {
+    font-family: Ubuntu, sans-serif;
+    font-weight: 400;
     font-size: 20px;
-    color: #000;
-    white-space: nowrap;
+    fill: #fff;
+    stroke: none;
 }
-.motto-word { display: inline-block; }
-.motto-caret {
-    margin-left: 1px;
-    animation: motto-blink 1s step-end infinite;
+/* transparent hover target overlaying the motto glyphs (mask content gets no pointer events) */
+.motto-hit {
+    font-family: Ubuntu, sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    pointer-events: all;
 }
-@keyframes motto-blink { 50% { opacity: 0; } }
+/* loading: hide the photo so the grey fallback rect shows name + motto as grey ink (#4a515d);
+   endIntro() removes .loading to reveal the photo */
+.screen2.loading #photo-image { visibility: hidden; }
 
 /* scroll-down hint at the bottom of the cover; faded in by lens.js after the image loads,
    and out as you scroll (overall opacity is JS-driven). The mouse stays still while its wheel
@@ -262,8 +248,4 @@ body {
 .scroll-spacer {
     height: 200vh;
     height: 200dvh;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .motto-caret { animation: none; }
 }
