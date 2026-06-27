@@ -1,0 +1,74 @@
+<!doctype html>
+<!-- Inspired by Cong Min · Recoded by Claude -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cong Min</title>
+    <meta name="description" content="Cong Min — Stay Curious">
+    <meta name="generator" content="Recoded by Claude">
+    <meta name="theme-color" content="#181b21">
+    <link rel="icon" href="./favicon.ico">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Cong Min">
+    <meta property="og:description" content="Stay Curious">
+    <meta property="og:url" content="https://congm.in/">
+    <meta property="og:image" content="https://congm.in/og.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preload" href="./assets/fonts/Ubuntu.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+    <h1 class="sr-only">Cong Min</h1>
+
+    <!-- screen 1: dark cover (wallpaper + white name); the cover blooms in from the centre on load -->
+    <div class="screen screen1">
+        <div class="cover">
+            <div class="wallpaper"></div>
+            <div class="filter"></div>
+            <svg class="wordmark wm-light" viewBox="0 0 630 180" aria-hidden="true"><text x="50%" y="50%" dy=".35em">Cong Min</text></svg>
+        </div>
+    </div>
+
+    <!-- screen 2: light; revealed by the cursor lens on screen 1, fully on scroll.
+         the name is black "ink"; the wallpaper sits on top with mix-blend-mode:screen,
+         so the photo fills only the letters while the background stays solid (à la the original) -->
+    <div class="screen screen2" id="screen2">
+        <div class="watermark" id="watermark" aria-hidden="true"></div>
+        <div class="name-knockout">
+            <div class="name-field">
+                <svg class="wordmark wm-ink" viewBox="0 0 630 180" aria-hidden="true"><text x="50%" y="50%" dy=".35em">Cong Min</text></svg>
+                <p class="motto">
+                    <span aria-hidden="true">Stay <span class="motto-word" id="motto-word"></span><span class="motto-caret">.</span></span>
+                    <span class="sr-only">Stay curious, inspired, creative, passionate, grounded, patient, present, humble.</span>
+                </p>
+                <div class="wallpaper wallpaper-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- gives the page scroll height (screens are fixed) -->
+    <div class="scroll-spacer" aria-hidden="true"></div>
+
+    <!-- scroll-down hint: a mouse with a scrolling wheel (top layer, so the lens never blocks the click) -->
+    <div class="scroll-hint" aria-hidden="true">
+        <svg viewBox="0 0 24 32" width="18" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="2" width="18" height="26" rx="9"/>
+            <circle class="scroll-wheel" cx="12" cy="9" r="2" fill="#fff" stroke="none"/>
+        </svg>
+    </div>
+
+    <!-- black hole: feDisplacementMap warps the watermark around the cursor -->
+    <svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+        <filter id="bhf" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+            <feFlood flood-color="rgb(128,128,128)" result="neutral"/>
+            <feImage id="bh-map" x="0" y="0" width="320" height="320" preserveAspectRatio="none" result="lensmap"/>
+            <feComposite in="lensmap" in2="neutral" operator="over" result="map"/>
+            <feDisplacementMap in="SourceGraphic" in2="map" scale="-30" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+    </defs></svg>
+
+    <script src="./assets/js/lens.js" defer></script>
+    <script src="./assets/js/motto.js" defer></script>
+</body>
+</html>
