@@ -10,7 +10,12 @@
     el.textContent = START; // static while loading: "Stay Passionate."
 
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return; // keep it static when reduced motion is requested
+    if (reduce) {
+        var caret = document.getElementById('motto-caret');
+        var caretAnim = caret && caret.querySelector('animate');
+        if (caretAnim) caretAnim.remove(); // hold the caret static under reduced motion
+        return;
+    }
 
     var TYPE = 120;  // ms per character typed
     var ERASE = 75;  // ms per character erased (a touch slower = smoother)
@@ -34,21 +39,27 @@
         if (!deleting) {
             ci++;
             el.textContent = word.slice(0, ci);
+            syncHit();
             if (ci === word.length) { deleting = true; schedule(HOLD); return; }
             schedule(TYPE);
         } else {
             ci--;
             el.textContent = word.slice(0, ci);
+            syncHit();
             if (ci === 0) { deleting = false; wi = (wi + 1) % words.length; schedule(GAP); return; }
             schedule(ERASE);
         }
     }
 
-    var motto = document.querySelector('.motto');
-    if (motto) {
-        motto.addEventListener('mouseenter', function () { paused = true; });
-        motto.addEventListener('mouseleave', function () { paused = false; });
+    var hit = document.getElementById('motto-hit');
+    if (hit) {
+        hit.addEventListener('mouseenter', function () { paused = true; });
+        hit.addEventListener('mouseleave', function () { paused = false; });
     }
+    // keep the transparent hover target's text matched to the visible motto so its box
+    // overlays the glyphs
+    function syncHit() { if (hit) hit.textContent = 'Stay ' + (el.textContent || '') + '.'; }
+    syncHit();
 
     // begin cycling only once the wallpaper image has loaded
     var started = false;

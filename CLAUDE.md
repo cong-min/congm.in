@@ -33,7 +33,7 @@ favicon.ico  og.png
 
 - Two fixed full-screen layers: `screen1` (`.cover` = dark Bing wallpaper + filter
   + white SVG name) sits under `screen2` (light; `CONGMIN` watermark grid +
-  wallpaper-knockout name + motto).
+  photo-filled name + motto).
 - A cursor **lens**: `screen2` is revealed through `screen1` via
   `clip-path: circle()`. The circle centre eases toward the cursor (rAF loop) and
   its radius is scroll-driven — 0 at the top, the page diagonal at the bottom.
@@ -41,9 +41,12 @@ favicon.ico  og.png
   around the cursor; `lens.js` builds/moves it (and a CSS radial darkening mask)
   only when the cursor actually moves — a deliberate perf guard, so scrolling does
   not re-render the full-screen filter.
-- The name is SVG `<text>` on both screens (shared `viewBox` keeps them aligned);
-  `screen2` uses a knockout (`multiply`/`screen` blends) so the wallpaper photo
-  fills the letters while the background stays solid.
+- The name is SVG `<text>` on both screens (shared `viewBox` keeps them aligned).
+  On `screen2` the name + motto are photo-filled by a full-viewport SVG `<image>`
+  (the same aligned cover as `screen1`) masked to the glyph shapes (`#photo-mask`)
+  and composited source-over — no blend reads the watermark/black-hole backdrop, so
+  the per-frame filter re-render cannot disturb the fill. `lens.js` drives the
+  masked name box + motto position with the same numbers `screen1` derives.
 - **Touch (`pointer: coarse`)**: there is no cursor, so the lens stays centred and
   simply expands from the centre on scroll, and the black hole is disabled.
 
