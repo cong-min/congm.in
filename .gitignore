@@ -1,15 +1,7 @@
-package-lock.json
-node_modules
 .DS_Store
 
-# local env files
-.env.local
-.env.*.local
-
-# Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Local agent / preview config
+.claude
 
 # Editor directories and files
 .idea
