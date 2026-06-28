@@ -45,12 +45,9 @@
                      has no viewBox, so 1 user unit == 1px and coordinates are CSS px. -->
                 <mask id="photo-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%"
                       color-interpolation="sRGB">
-                    <!-- name: nested svg shares screen 1's 630x180 viewBox + glyph geometry;
-                         lens.js sets x/y/width/height to the centred min(90vw,640px) box. -->
-                    <svg id="mask-name" class="mask-wordmark" viewBox="0 0 630 180"
-                         x="0" y="0" width="640" height="182.857" preserveAspectRatio="xMidYMid meet">
-                        <text x="50%" y="50%" dy=".35em">Cong Min</text>
-                    </svg>
+                    <!-- name: a flat <text> (no nested <svg>, which mobile engines drop inside a
+                         <mask>); lens.js sets x/y/font-size/stroke-width to match screen 1's box. -->
+                    <text id="mask-name" class="mask-wordmark" text-anchor="middle" dy=".35em">Cong Min</text>
                     <!-- motto: live typewriter text; lens.js sets x/y to a watermark row. -->
                     <text id="mask-motto" class="mask-motto" x="50%" y="50%" text-anchor="middle" xml:space="preserve">Stay <tspan class="motto-word" id="motto-word"></tspan><tspan class="motto-caret" id="motto-caret">.<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1s" calcMode="discrete" repeatCount="indefinite"/></tspan></text>
                 </mask>

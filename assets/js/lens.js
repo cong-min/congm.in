@@ -62,15 +62,15 @@
         // motto: snapped to a real watermark row near the bottom and centred on it
         var mottoRow = Math.min(rows - 1, Math.round(rMid + (0.35 * h) / CELL));
         var mY = (mottoRow - rMid) * CELL;
-        // name: same centred min(90vw,640px) box as screen 1; height via the 180/630 viewBox
-        // ratio; -5px replicates screen 1's .wordmark margin-bottom:10px (flex centres the
-        // single in-flow child, shifting it up by half the margin)
+        // name: a flat <text> centred like screen 1. font-size 130/630 of the box reproduces
+        // screen 1's on-screen name width, stroke-width keeps its 5/130 proportion, and
+        // y = centre - 5px replicates screen 1's .wordmark margin-bottom:10px nudge (with
+        // dy=.35em centring the line on y)
         if (maskName) {
-            var nameH = nameW * (180 / 630);
-            maskName.setAttribute('width', nameW);
-            maskName.setAttribute('height', nameH);
-            maskName.setAttribute('x', (w - nameW) / 2);
-            maskName.setAttribute('y', (h - nameH) / 2 - 5);
+            maskName.setAttribute('x', w / 2);
+            maskName.setAttribute('y', h / 2 - 5);
+            maskName.setAttribute('font-size', 130 * nameW / 630);
+            maskName.setAttribute('stroke-width', 5 * nameW / 630);
         }
         // motto: centred on the same watermark-row centreline; baseline = row centre + ~0.35em
         // of the 20px text so the line sits optically centred on the row
@@ -175,7 +175,10 @@
             if (bg.decode) bg.decode().then(startIntro, startIntro); // decode failure still blooms
             else startIntro();
         };
-        bg.onerror = startIntro;                            // still bloom on the #aaa fallback
+        bg.onerror = function () {                           // failed wallpaper: keep the grey
+            screen2.classList.add('no-photo');              // fallback ink (hide the broken <image>)
+            startIntro();
+        };
         bg.src = 'https://congm.in/bing';
         setTimeout(startIntro, 4000);                       // safety net if neither event fires
     } else {
