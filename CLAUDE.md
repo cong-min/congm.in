@@ -41,12 +41,17 @@ favicon.ico  og.png
   around the cursor; `lens.js` builds/moves it (and a CSS radial darkening mask)
   only when the cursor actually moves — a deliberate perf guard, so scrolling does
   not re-render the full-screen filter.
-- The name is SVG `<text>` on both screens (shared `viewBox` keeps them aligned).
-  On `screen2` the name + motto are photo-filled by a full-viewport SVG `<image>`
-  (the same aligned cover as `screen1`) masked to the glyph shapes (`#photo-mask`)
-  and composited source-over — no blend reads the watermark/black-hole backdrop, so
-  the per-frame filter re-render cannot disturb the fill. `lens.js` drives the
-  masked name box + motto position with the same numbers `screen1` derives.
+- The name is SVG `<text>` on both screens (matched font-size/weight/stroke keep them
+  aligned). On `screen2` the name + motto are photo-filled by a full-viewport SVG
+  `<image>` (the same aligned cover as `screen1`) masked to the glyph shapes
+  (`#photo-mask`) and composited source-over — no blend reads the watermark/black-hole
+  backdrop, so the per-frame filter re-render cannot disturb the fill. The mask name is a
+  flat `<text>`, not a nested `<svg>` (mobile engines, notably iOS Safari, drop a nested
+  `<svg>` inside a `<mask>` and render the whole thing blank); `lens.js` sets its
+  font-size + stroke-width to track screen 1's responsive box, and drives the motto
+  position with the same numbers `screen1` derives. A grey `#4a515d` rect behind the
+  `<image>` shows through the glyphs while the wallpaper loads or if it fails
+  (`.loading`/`.no-photo`).
 - **Touch (`pointer: coarse`)**: there is no cursor, so the lens stays centred and
   simply expands from the centre on scroll, and the black hole is disabled.
 

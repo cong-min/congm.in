@@ -183,17 +183,15 @@ body {
     height: 100%;
     pointer-events: none; /* lens/scroll pass through; the motto hit-target re-enables itself */
 }
-/* mask content is luminance — pure white reveals the photo. The nested name svg shares
-   screen 1's 630x180 viewBox + stroke geometry, so the revealed silhouette matches the white
-   name on screen 1 (same font-size/weight/stroke/paint-order). */
-.mask-wordmark text {
+/* mask content is luminance — pure white reveals the photo. The flat name <text> matches screen
+   1's stroke geometry (same weight/stroke/paint-order), so the revealed silhouette matches the
+   white name on screen 1; lens.js sets its font-size + stroke-width to track the responsive box. */
+.mask-wordmark {
     font-family: Ubuntu, sans-serif;
     font-weight: 500;
-    font-size: 130px;
     text-anchor: middle;
     fill: #fff;
     stroke: #fff;
-    stroke-width: 5px;
     stroke-linejoin: round;
     paint-order: stroke;
 }
@@ -212,8 +210,10 @@ body {
     pointer-events: all;
 }
 /* loading: hide the photo so the grey fallback rect shows name + motto as grey ink (#4a515d);
-   endIntro() removes .loading to reveal the photo */
-.screen2.loading #photo-image { visibility: hidden; }
+   endIntro() removes .loading to reveal the photo. .no-photo keeps it hidden when the wallpaper
+   fails to load, so the grey rect shows through instead of a broken <image>. */
+.screen2.loading #photo-image,
+.screen2.no-photo #photo-image { visibility: hidden; }
 
 /* scroll-down hint at the bottom of the cover; faded in by lens.js after the image loads,
    and out as you scroll (overall opacity is JS-driven). The mouse stays still while its wheel
